@@ -22,9 +22,9 @@ class GatewayForm
      *
      * @return string
      */
-    public static function getDefaultViewPath() : string
+    public static function getDefaultViewPath(): string
     {
-        return dirname(__DIR__).'/resources/views/redirect-form.blade.php';
+        return dirname(__DIR__) . '/resources/views/redirect-form.blade.php';
     }
 
     /**
@@ -44,7 +44,7 @@ class GatewayForm
      *
      * @return string
      */
-    public static function getViewPath() : string
+    public static function getViewPath(): string
     {
         return static::$viewPath ?? static::getDefaultViewPath();
     }
@@ -54,7 +54,7 @@ class GatewayForm
      *
      * @return string
      */
-    public function render() : string
+    public function render(): string
     {
         return view(static::getViewPath())
             ->with("action", $this->action)
@@ -70,6 +70,7 @@ class GatewayForm
     public function toArray(): array
     {
         return [
+            'view'   => static::getViewPath(),
             'action' => $this->action,
             'inputs' => $this->inputs,
             'method' => $this->method,
