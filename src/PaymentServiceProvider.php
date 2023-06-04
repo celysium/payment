@@ -4,11 +4,12 @@ namespace Celysium\Payment;
 
 use Illuminate\Support\ServiceProvider;
 
-class GatewayServiceProvider extends ServiceProvider
+class PaymentServiceProvider extends ServiceProvider
 {
     public function boot()
     {
 
+        $this->mergeConfigFrom( __DIR__ . '/../config/payment.php', 'payment');
         /**
          * Configurations that needs to be done by user.
          */

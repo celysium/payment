@@ -130,7 +130,7 @@ class Payment
         }
         $config = config("payment.drivers.$driver");
         if($config == null) {
-            throw new DriverNotFoundException('Driver not selected or default driver does not exist.');
+            throw new DriverNotFoundException('Driver selected does not exist.');
         }
         $this->driver = $driver;
         $this->config = (object) $config;

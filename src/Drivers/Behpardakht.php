@@ -8,7 +8,6 @@ use Celysium\Payment\Exceptions\InvalidPaymentException;
 use Celysium\Payment\Exceptions\PurchaseFailedException;
 use Celysium\Payment\GatewayForm;
 use Celysium\Payment\Receipt;
-use Carbon\Carbon;
 use SoapClient;
 use SoapFault;
 use Celysium\Payment\Payment;
@@ -57,8 +56,8 @@ class Behpardakht implements DriverInterface
             'userPassword' => $this->payment->config->password,
             'callBackUrl' => $this->payment->config->callbackUrl,
             'amount' => $this->payment->amount,
-            'localDate' => Carbon::now()->format('Ymd'),
-            'localTime' => Carbon::now()->format('Gis'),
+            'localDate' => now()->format('Ymd'),
+            'localTime' => now()->format('Gis'),
             'orderId' => $this->payment->id,
             'additionalData' => $this->payment->getDetail('additionalData', $this->payment->config->descripton),
             'payerId' => $this->payment->getDetail('payerId', 0)
