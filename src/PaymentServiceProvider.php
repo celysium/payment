@@ -9,18 +9,18 @@ class PaymentServiceProvider extends ServiceProvider
     public function boot()
     {
 
-        $this->mergeConfigFrom( __DIR__ . '/../config/payment.php', 'payment');
+        $this->mergeConfigFrom(__DIR__ . '/../config/payment.php', 'payment');
         /**
          * Configurations that needs to be done by user.
          */
         $this->publishes(
             [
-                dirname(__DIR__).'/config/payment.php' => config_path('payment.php'),
+                __DIR__ . '/../config/payment.php' => config_path('payment.php'),
             ],
             'config-gateway'
         );
 
-        $this->loadViewsFrom([__DIR__ .'/resources/views'], 'payemnt');
+        $this->loadViewsFrom([__DIR__ . '/../resources/views'], 'payment');
 
     }
 
