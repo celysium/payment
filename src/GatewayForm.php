@@ -24,7 +24,7 @@ class GatewayForm
      */
     public static function getDefaultViewPath(): string
     {
-        return dirname(__DIR__) . '/resources/views/redirect-form.blade.php';
+        return 'payemnt::redirect';
     }
 
     /**

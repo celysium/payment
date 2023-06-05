@@ -19,6 +19,9 @@ class PaymentServiceProvider extends ServiceProvider
             ],
             'config-gateway'
         );
+
+        $this->loadViewsFrom([__DIR__ .'/resources/views'], 'payemnt');
+
     }
 
     public function register()
