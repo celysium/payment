@@ -17,7 +17,7 @@ class PaymentServiceProvider extends ServiceProvider
             [
                 __DIR__ . '/../config/payment.php' => config_path('payment.php'),
             ],
-            'config-gateway'
+            'config-payment'
         );
 
         $this->loadViewsFrom([__DIR__ . '/../resources/views'], 'payment');
