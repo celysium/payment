@@ -1,6 +1,7 @@
 <?php
 
 use Celysium\Payment\Drivers\Behpardakht;
+use Celysium\Payment\Drivers\Local;
 use Celysium\Payment\Drivers\Saman;
 
 return [
@@ -26,6 +27,11 @@ return [
     |
     */
     'drivers' => [
+        'local' => [
+            'gateway' => Local::class,
+            'apiPurchaseUrl' => route('local-driver.pay'),
+            'callbackUrl' => route('local-driver.callback'),
+        ],
         'behpardakht' => [
             'gateway' => Behpardakht::class,
             'apiPurchaseUrl' => 'https://bpm.shaparak.ir/pgwchannel/services/pgw?wsdl',
