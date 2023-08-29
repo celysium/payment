@@ -5,7 +5,7 @@
     <title>Local payment gateway</title>
 </head>
 <body>
-<form id="form" method="POST" action="{{ $callback }}">
+<form id="form" method="POST" action="{{ route('local-driver.callback') }}">
     <input type="hidden" name="transactionId" value="{{ cache('transactionId') }}">
     <input type="hidden" name="id" value="{{ cache('id') }}">
         <input type="hidden" name="status" id="action_type" value="">
