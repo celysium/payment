@@ -9,6 +9,7 @@ use Celysium\Payment\GatewayForm;
 use Celysium\Payment\LocalGatewayForm;
 use Celysium\Payment\Payment;
 use Celysium\Payment\Receipt;
+use Illuminate\Support\Facades\Cache;
 
 class Local implements DriverInterface
 {
@@ -39,7 +40,7 @@ class Local implements DriverInterface
             'transactionId' => $transactionId
         ];
 
-        cache($data, now()->addMinutes(10));
+        Cache::putMany($data, now()->addMinutes(10));
 
         $this->payment->transactionId($transactionId);
 
@@ -76,7 +77,7 @@ class Local implements DriverInterface
      */
     public function verify(array $request): Receipt
     {
-        $status = cache('status');
+        $status = (int)cache('status');
 
         if ($status !== 1) {
             $this->notVerified();

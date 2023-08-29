@@ -14,7 +14,7 @@ class LocalDriverController extends Controller
 
     public function callback(Request $request)
     {
-        $status = (bool)$request->input('status');
+        $status = $request->input('status');
 
         cache(['status' => $status], now()->addMinutes(10));
 
