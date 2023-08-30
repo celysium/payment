@@ -29,8 +29,8 @@ return [
     'drivers' => [
         'local' => [
             'gateway' => Local::class,
-            'apiPurchaseUrl' => env('LOCAL_GATEWAY_REDIRECT_URL'),
-            'callbackUrl' => env('LOCAL_GATEWAY_CALLBACK_URL'),
+            'apiPurchaseUrl' => '/local-payment/callback',
+            'callbackUrl' => '/local-payment/pay',
         ],
         'behpardakht' => [
             'gateway' => Behpardakht::class,
