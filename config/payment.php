@@ -29,7 +29,7 @@ return [
     'drivers' => [
         'local' => [
             'gateway' => Local::class,
-            'apiPurchaseUrl' => '/local-payment/callback',
+            'apiPaymentUrl' => '/local-payment/callback',
             'callbackUrl' => '/local-payment/pay',
         ],
         'behpardakht' => [
