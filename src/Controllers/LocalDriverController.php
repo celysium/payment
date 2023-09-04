@@ -2,22 +2,30 @@
 
 namespace Celysium\Payment\Controllers;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Routing\Controller;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class LocalDriverController extends Controller
 {
-    public function pay(Request $request)
+    /**
+     * @return View
+     */
+    public function pay(): View
     {
-        return view('payment::local-pay', $request->all());
+        return view('payment::pay');
     }
 
-    public function callback(Request $request)
+    /**
+     * @param Request $request
+     * @return View
+     */
+    public function callback(Request $request): View
     {
         $status = $request->input('status');
 
         cache(['status' => $status], now()->addMinutes(10));
 
-        return redirect(cache('callbackUrl'))->with($request->all());
+        return view('payment::callback');
     }
 }

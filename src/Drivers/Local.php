@@ -35,7 +35,7 @@ class Local implements DriverInterface
         $data = [
             'id'            => $this->payment->id,
             'amount'        => $this->payment->amount,
-            'callback'      => $this->payment->config->callbackUrl,
+            'callbackUrl'   => $this->payment->config->callbackUrl,
             'status'        => 0,
             'transactionId' => $transactionId
         ];
@@ -60,10 +60,7 @@ class Local implements DriverInterface
 
         $data = [
             'id'            => $this->payment->id,
-            'driver'        => $this->payment->driver,
             'transactionId' => $this->payment->transactionId,
-            'amount'        => $this->payment->amount,
-            'callbackUrl'   => $this->payment->config->callbackUrl,
         ];
 
         return new LocalGatewayForm($payUrl, $data, 'POST');
@@ -83,12 +80,7 @@ class Local implements DriverInterface
             $this->notVerified();
         }
 
-        $receipt = new Receipt(cache('transaction_id'));
-        $receipt->detail([
-            'transactionId' => cache('transaction_id'),
-        ]);
-
-        return $receipt;
+        return new Receipt(time());
     }
 
     /**

@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@500&display=swap" rel="stylesheet">
 
-    <title>Pay local gateway</title>
+    <title>Callback local gateway</title>
     <style>
         body {
             font-family: 'Vazirmatn', sans-serif;
@@ -22,11 +22,6 @@
 
         .mt-4 {
             margin-top: 1.5rem !important;
-        }
-
-        .mx-2 {
-            margin-right: 0.75rem !important;
-            margin-left: 0.75rem !important;
         }
 
         .center {
@@ -83,18 +78,31 @@
 <body>
 <div class="container-fluid">
     <div class="mt-4 center">
-        <form id="form" method="POST" action="{{ route('local-driver.callback') }}">
-            <div>پرداخت مبلغ:</div>
-            <div><b> {{ cache('amount') }}</b></div>
+        <form id="form" method="POST" action="{{ cache('callbackUrl') }}">
+            <div>در حال بازگشت به سایت پذیرنده <span id="countdown">3</span> ثانیه</div>
+            <input type="hidden" name="id" value="{{ cache('id') }}">
 
-            <button class="btn success mt-4 mx-2" onClick="submitForm(1)">پرداخت</button>
-            <button class="btn danger mt-4 mx-2" onClick="submitForm(2)">انصراف</button>
+            <button class="btn success mt-4" type="submit">تکمیل پرداخت</button>
         </form>
     </div>
 </div>
 <script>
+    let seconds = 3;
+
+    function countdown() {
+        seconds = seconds - 1;
+        if (seconds <= 0) {
+            // submit the form
+            submitForm();
+        } else {
+            // Update remaining seconds
+            document.getElementById("countdown").innerHTML = seconds;
+            // Count down using javascript
+            window.setTimeout("countdown()", 1000);
+        }
+    }
+
     function submitForm(type) {
-        document.getElementById('action_type').value = type;
         document.getElementById('form').submit();
     }
 </script>
