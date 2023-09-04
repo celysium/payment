@@ -151,7 +151,6 @@ class Payment
      */
     public function gateway(): DriverInterface
     {
-        $gateway = $this->config['gateway'];
-        return new $gateway($this);
+        return new $this->config->gateway($this);
     }
 }
