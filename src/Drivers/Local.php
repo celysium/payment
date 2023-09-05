@@ -6,7 +6,6 @@ use Celysium\Payment\Contracts\DriverInterface;
 use Celysium\Payment\Exceptions\InvalidPaymentException;
 use Celysium\Payment\Exceptions\PurchaseFailedException;
 use Celysium\Payment\GatewayForm;
-use Celysium\Payment\LocalGatewayForm;
 use Celysium\Payment\Payment;
 use Celysium\Payment\Receipt;
 use Illuminate\Support\Facades\Cache;
@@ -59,11 +58,10 @@ class Local implements DriverInterface
         $payUrl = $this->payment->config->apiPaymentUrl;
 
         $data = [
-            'id'            => $this->payment->id,
             'transactionId' => $this->payment->transactionId,
         ];
 
-        return new LocalGatewayForm($payUrl, $data, 'POST');
+        return new GatewayForm($payUrl, $data, 'POST');
     }
 
     /**
