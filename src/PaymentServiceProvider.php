@@ -21,7 +21,7 @@ class PaymentServiceProvider extends ServiceProvider
         );
 
         $this->loadViewsFrom([__DIR__ . '/../resources/views'], 'payment');
-        $this->loadRoutesFrom(__DIR__.'/Routes/Payment.php');
+        $this->loadRoutesFrom(__DIR__.'/Routes/web.php');
 
     }
 

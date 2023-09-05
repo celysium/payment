@@ -52,19 +52,6 @@
             color: #37c481 !important;
         }
 
-        .danger {
-            color: #ff4659 !important;
-        }
-
-        .btn.danger {
-            color: #fff !important;
-            background-color: #ff4659;
-        }
-
-        .btn.danger:hover {
-            background-color: #ea3143;
-        }
-
         .btn.success {
             color: #fff !important;
             background-color: #37c481 !important;
@@ -102,9 +89,10 @@
         }
     }
 
-    function submitForm(type) {
+    function submitForm() {
         document.getElementById('form').submit();
     }
+    countdown();
 </script>
 </body>
 </html>
