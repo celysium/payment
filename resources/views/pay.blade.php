@@ -84,6 +84,7 @@
 <div class="container-fluid">
     <div class="mt-4 center">
         <form id="form" method="POST" action="{{ route('local-driver.callback') }}">
+            <input type="hidden" id="status" name="status" value="0">
             <div>مهلت پرداخت<span id="countdown"></span> ثانیه</div>
             <div>پرداخت مبلغ:</div>
             <div><b> {{ cache('amount') }}</b></div>
@@ -95,7 +96,7 @@
 </div>
 <script>
     function submitForm(type) {
-        document.getElementById('action_type').value = type;
+        document.getElementById('status').value = type;
         document.getElementById('form').submit();
     }
     let seconds = 30;
