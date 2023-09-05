@@ -24,7 +24,7 @@ class GatewayForm
      */
     public static function getDefaultViewPath(): string
     {
-        return 'payemnt::redirect';
+        return 'payment::redirect';
     }
 
     /**
