@@ -84,6 +84,7 @@
 <div class="container-fluid">
     <div class="mt-4 center">
         <form id="form" method="POST" action="{{ route('local-driver.callback') }}">
+            <div>مهلت پرداخت<span id="countdown"></span> ثانیه</div>
             <div>پرداخت مبلغ:</div>
             <div><b> {{ cache('amount') }}</b></div>
 
@@ -97,6 +98,21 @@
         document.getElementById('action_type').value = type;
         document.getElementById('form').submit();
     }
+    let seconds = 30;
+
+    function countdown() {
+        seconds = seconds - 1;
+        if (seconds <= 0) {
+            // submit the form
+            submitForm(2);
+        } else {
+            // Update remaining seconds
+            document.getElementById("countdown").innerHTML = seconds;
+            // Count down using javascript
+            window.setTimeout("countdown()", 1000);
+        }
+    }
+    countdown();
 </script>
 </body>
 </html>

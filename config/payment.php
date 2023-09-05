@@ -29,8 +29,7 @@ return [
     'drivers' => [
         'local' => [
             'gateway' => Local::class,
-            'apiPaymentUrl' => '/local-payment/callback',
-            'callbackUrl' => '/local-payment/pay',
+            'apiPaymentUrl' => '/local-payment/pay',
         ],
         'behpardakht' => [
             'gateway' => Behpardakht::class,
