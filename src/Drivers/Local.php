@@ -61,7 +61,7 @@ class Local implements DriverInterface
             'transactionId' => $this->payment->transactionId,
         ];
 
-        return new GatewayForm($payUrl, $data, 'POST');
+        return new GatewayForm($payUrl, $data, 'GET');
     }
 
     /**

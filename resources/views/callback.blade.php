@@ -65,9 +65,10 @@
 <body>
 <div class="container-fluid">
     <div class="mt-4 center">
-        <form id="form" method="POST" action="{{ cache('callbackUrl') }}">
+        <form id="form" method="GET" action="{{ cache('callbackUrl') }}">
             <div>در حال بازگشت به سایت پذیرنده <span id="countdown">3</span> ثانیه</div>
             <input type="hidden" name="id" value="{{ cache('id') }}">
+            <input type="hidden" name="driver" value="local">
 
             <button class="btn success mt-4" type="submit">تکمیل پرداخت</button>
         </form>
