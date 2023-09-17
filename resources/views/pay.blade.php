@@ -83,7 +83,7 @@
 <body>
 <div class="container-fluid">
     <div class="mt-4 center">
-        <form id="form" method="POST" action="{{ config('payment.drivers.local.apiCallbackUrl') }}">
+        <form id="form" method="GET" action="{{ config('payment.drivers.local.apiCallbackUrl') }}">
             <input type="hidden" id="status" name="status" value="0">
             <div>مهلت پرداخت<span id="countdown"></span> ثانیه</div>
             <div>پرداخت مبلغ:</div>
