@@ -30,6 +30,7 @@ return [
         'local' => [
             'gateway' => Local::class,
             'apiPaymentUrl' => '/local-payment/pay',
+            'apiCallbackUrl' => '/local-payment/callback',
         ],
         'behpardakht' => [
             'gateway' => Behpardakht::class,
