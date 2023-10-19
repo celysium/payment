@@ -72,7 +72,10 @@ class Ayria implements DriverInterface
     {
         $payUrl = $this->payment->getDetail('paymentUrl');
 
-        return new GatewayForm($payUrl, [], 'GET');
+        $data = [
+            'driver' => $this->payment->driver,
+        ];
+        return new GatewayForm($payUrl, $data, 'GET');
     }
 
     /**
