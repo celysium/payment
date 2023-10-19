@@ -227,7 +227,7 @@ class Saman implements DriverInterface
 
     public function callbackId(array $request)
     {
-        return $request['ResNum'];
+        return $request['RefNum'];
     }
 
     /**
