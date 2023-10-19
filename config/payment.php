@@ -40,7 +40,7 @@ return [
             'referralCode' => env('AYRIA_REFERRAL_CODE'),
             'walletId' => env('AYRIA_WALLET_ID'),
             'apiKey' => env('AYRIA_API_KEY'),
-            'callbackUrl' => env('BEHPARDAKHT_CALLBACK'),
+            'callbackUrl' => env('AYRIA_CALLBACK'),
             'description' => 'payment using apg',
         ],
         'behpardakht' => [
