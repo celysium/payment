@@ -35,4 +35,7 @@ interface DriverInterface
      * @return Receipt
      */
     public function refund() : Receipt;
+
+
+    public function callbackId(array $request);
 }
