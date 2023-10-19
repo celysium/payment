@@ -32,8 +32,8 @@ class Ayria implements DriverInterface
         $data = [
             "referralCode"            => $this->payment->config->referralCode,
             "amount"                  => $this->payment->amount,
-            "payerMobile"             => $this->payment->detail('mobile'),
-            "payerName"               => $this->payment->detail('name'),
+            "payerMobile"             => $this->payment->getDetail('mobile'),
+            "payerName"               => $this->payment->getDetail('name'),
             "description"             => $this->payment->config->description,
             "paymentNumber"           => $this->payment->id,
             "extraData"               => "",
