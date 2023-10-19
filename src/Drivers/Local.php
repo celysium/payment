@@ -105,4 +105,9 @@ class Local implements DriverInterface
     {
         return new Receipt(time());
     }
+
+    public function callbackId(array $request)
+    {
+        return $request['id'];
+    }
 }
