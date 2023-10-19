@@ -225,6 +225,11 @@ class Saman implements DriverInterface
         return $receipt;
     }
 
+    public function callbackId(array $request)
+    {
+        return $request['ResNum'];
+    }
+
     /**
      * Trigger an exception
      *
