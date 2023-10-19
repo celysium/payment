@@ -108,4 +108,9 @@ class Ayria implements DriverInterface
     {
         return new Receipt('');
     }
+
+    public function callbackId(array $request)
+    {
+        return $request['paymentNumber'];
+    }
 }
