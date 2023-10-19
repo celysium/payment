@@ -9,7 +9,7 @@
     @foreach($inputs as $name => $value)
         <input type="hidden" name="{{ $name }}" value="{{ $value }}">
     @endforeach
-    <button type="submit">Go</button>
+    <button type="submit" style="display: none">Go</button>
 </form>
 <script>
     function submitForm() {

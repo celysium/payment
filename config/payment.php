@@ -1,5 +1,6 @@
 <?php
 
+use Celysium\Payment\Drivers\Ayria;
 use Celysium\Payment\Drivers\Behpardakht;
 use Celysium\Payment\Drivers\Local;
 use Celysium\Payment\Drivers\Saman;
@@ -31,6 +32,16 @@ return [
             'gateway' => Local::class,
             'apiPaymentUrl' => '/local-payment/pay',
             'apiCallbackUrl' => '/local-payment/callback',
+        ],
+        'ayria' => [
+            'gateway' => Ayria::class,
+            'apiPurchaseUrl' => 'https://api.ayriaclub.ir/apg/v1/create',
+            'apiVerificationUrl' => 'https://api.ayriaclub.ir/apg/v1/verify/',
+            'referralCode' => env('AYRIA_REFERRAL_CODE'),
+            'walletId' => env('AYRIA_WALLET_ID'),
+            'apiKey' => env('AYRIA_API_KEY'),
+            'callbackUrl' => env('BEHPARDAKHT_CALLBACK'),
+            'description' => 'payment using apg',
         ],
         'behpardakht' => [
             'gateway' => Behpardakht::class,
