@@ -229,6 +229,10 @@ class Behpardakht implements DriverInterface
 
         return $receipt;
     }
+    public function callbackId(array $request)
+    {
+        return $request['SaleOrderId'];
+    }
 
     /**
      * Convert status to a readable message.
