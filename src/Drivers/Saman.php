@@ -33,12 +33,12 @@ class Saman implements DriverInterface
     public function purchase(callable $callback): DriverInterface
     {
         $data = [
-            'action' => 'token',
-            'TerminalId' => $this->payment->config->merchantId,
-            'Amount' => $this->payment->amount,
-            'ResNum' => $this->payment->id,
+            'action'      => 'token',
+            'TerminalId'  => $this->payment->config->merchantId,
+            'Amount'      => $this->payment->amount,
+            'ResNum'      => $this->payment->id,
             'RedirectUrl' => $this->payment->config->callbackUrl,
-            'CellNumber' => '',
+            'CellNumber'  => '',
         ];
 
         if ($mobile = $this->payment->getDetail('mobile')) {
@@ -82,10 +82,10 @@ class Saman implements DriverInterface
      */
     public function verify(array $request): Receipt
     {
-        $data = array(
-            'RefNum' => $request['RefNum'],
+        $data = [
+            'RefNum'         => $request['RefNum'],
             'TerminalNumber' => $this->payment->config->merchantId,
-        );
+        ];
 
         $response = Http::acceptJson()
             ->post($this->payment->config->apiVerificationUrl, $data)
@@ -108,26 +108,25 @@ class Saman implements DriverInterface
     public function refund(): Receipt
     {
         $data = [
-            'username' => $this->payment->config->username,
-            'password' => $this->payment->config->password,
-            'refNum' => $this->payment->transactionId,
-            'resNum' => $this->payment->detail('saleOrderId'),
-            'transactionTermId' => $this->payment->config->transactionTermId,
-            'refundTermId' => $this->payment->config->refundTermId,
-            'amount' => $this->payment->amount,
-            'requestId' => $this->payment->id,
-            'exeTime' => 0,
-            'email' => $this->payment->getDetail('email', ''),
-            'cellNumber' => $this->payment->getDetail('mobile', ''),
+            'username'            => $this->payment->config->username,
+            'password'            => $this->payment->config->password,
+            'refNum'              => $this->payment->transactionId,
+            'resNum'              => $this->payment->detail('saleOrderId'),
+            'transactionTermId'   => $this->payment->config->transactionTermId,
+            'refundTermId'        => $this->payment->config->refundTermId,
+            'amount'              => $this->payment->amount,
+            'requestId'           => $this->payment->id,
+            'exeTime'             => 0,
+            'email'               => $this->payment->getDetail('email', ''),
+            'cellNumber'          => $this->payment->getDetail('mobile', ''),
             'documentDescription' => $this->payment->getDetail('description', '')
         ];
 
         $soap = new SoapClient($this->payment->config->apiRefundUrl);
 
-        if($data['amount'] < 150000000) {
+        if ($data['amount'] < 150000000) {
             $response = $soap->Refund_Reg($data);
-        }
-        else {
+        } else {
             $response = $soap->Refund_Reg_breakable($data);
         }
 
@@ -138,12 +137,12 @@ class Saman implements DriverInterface
         $receipt = new Receipt($response->ReferenceId);
 
         $receipt->detail([
-            'ActionName' => $response->ActionName,
+            'ActionName'    => $response->ActionName,
             'RequestStatus' => $response->RequestStatus,
-            'Description' => $response->Description,
-            'ErrorMessage' => $response->ErrorMessage,
-            'ErrorCode' => $response->ErrorCode,
-            'ReferenceId' => $response->ReferenceId,
+            'Description'   => $response->Description,
+            'ErrorMessage'  => $response->ErrorMessage,
+            'ErrorCode'     => $response->ErrorCode,
+            'ReferenceId'   => $response->ReferenceId,
         ]);
 
         return $receipt;
@@ -151,7 +150,7 @@ class Saman implements DriverInterface
 
     public function callbackId(array $request)
     {
-        return $request['RefNum'];
+        return $request['Token'];
     }
 
     /**
