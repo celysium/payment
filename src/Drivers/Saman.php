@@ -8,13 +8,14 @@ use Celysium\Payment\Exceptions\PurchaseFailedException;
 use Celysium\Payment\GatewayForm;
 use Celysium\Payment\Payment;
 use Celysium\Payment\Receipt;
+use Illuminate\Support\Facades\Http;
 use SoapClient;
 use SoapFault;
 
 class Saman implements DriverInterface
 {
     /**
-     * Behpardakht constructor.
+     * Saman constructor.
      *
      * @param Payment $payment
      */
@@ -25,41 +26,33 @@ class Saman implements DriverInterface
     /**
      * Purchase Invoice.
      *
-     * @return string
-     *
+     * @param callable $callback
+     * @return self
      * @throws PurchaseFailedException
-     * @throws SoapFault
      */
     public function purchase(callable $callback): DriverInterface
     {
-        $data = array(
-            'MID' => $this->payment->config->merchantId,
-            'ResNum' => $this->payment->id,
+        $data = [
+            'action' => 'token',
+            'TerminalId' => $this->payment->config->merchantId,
             'Amount' => $this->payment->amount,
-        );
+            'ResNum' => $this->payment->id,
+            'RedirectUrl' => $this->payment->config->callbackUrl,
+            'CellNumber' => '',
+        ];
 
-        //set CellNumber for get user cards
         if ($mobile = $this->payment->getDetail('mobile')) {
             $data['CellNumber'] = $mobile;
         }
+        $response = Http::acceptJson()
+            ->post($this->payment->config->apiPurchaseUrl, $data)
+            ->json();
 
-        $this->payment->detail([
-            'ResNum' => $data['ResNum'],
-        ]);
-
-        $soap = new SoapClient(
-            $this->payment->config->apiPurchaseUrl
-        );
-
-        $response = $soap->RequestToken($data['MID'], $data['ResNum'], $data['Amount'], $data['CellNumber']);
-
-        $status = (int)$response;
-
-        if ($status < 0) {
-            $this->purchaseFailed($response);
+        if ($response['status'] < 0) {
+            throw new PurchaseFailedException($response['errorDesc']);
         }
 
-        $this->payment->transactionId($response);
+        $this->payment->transactionId($response['token']);
 
         $callback($this->payment);
 
@@ -76,105 +69,36 @@ class Saman implements DriverInterface
         $payUrl = $this->payment->config->apiPaymentUrl;
 
         $data = [
-            'driver' => $this->payment->driver,
             'Token' => $this->payment->transactionId,
-            'RedirectUrl' => $this->payment->config->callbackUrl,
         ];
         return new GatewayForm($payUrl, $data, 'POST');
     }
 
     /**
      * Verify payment
-     *
-     *
+     * @param array $request
+     * @return Receipt
      * @throws InvalidPaymentException
-     * @throws SoapFault
      */
     public function verify(array $request): Receipt
     {
         $data = array(
             'RefNum' => $request['RefNum'],
-            'merchantId' => $this->payment->config->merchantId,
+            'TerminalNumber' => $this->payment->config->merchantId,
         );
 
-        $soap = new SoapClient($this->payment->config->apiVerificationUrl);
-        $status = (int)$soap->VerifyTransaction($data['RefNum'], $data['merchantId']);
+        $response = Http::acceptJson()
+            ->post($this->payment->config->apiVerificationUrl, $data)
+            ->json();
 
-        if ($status < 0) {
-            $this->notVerified($status);
+        if (!$response['Success']) {
+            throw new InvalidPaymentException($response['ResultDescription']);
         }
 
-        $receipt = new Receipt($data['RefNum']);
-        $receipt->detail([
-            'traceNo' => $request['TraceNo'],
-            'referenceNo' => $request['RRN'],
-            'transactionId' => $request['RefNum'],
-            'cardNo' => $request['SecurePan'],
-        ]);
+        $receipt = new Receipt($response['TransactionDetail']['StraceNo']);
+        $receipt->detail($response['TransactionDetail']);
 
         return $receipt;
-    }
-
-    /**
-     * Trigger an exception
-     *
-     * @param $status
-     *
-     * @throws PurchaseFailedException
-     */
-    protected function purchaseFailed($status)
-    {
-        $message = match ($status) {
-            -1 => ' تراکنش توسط خریدار کنسل شده است.',
-            -6 => 'سند قبال برگشت کامل یافته است. یا خارج از زمان 30 دقیقه ارسال شده است.',
-            79 => 'مبلغ سند برگشتی، از مبلغ تراکنش اصلی بیشتر است.',
-            12 => 'درخواست برگشت یک تراکنش رسیده است، در حالی که تراکنش اصلی پیدا نمی شود.',
-            14 => 'شماره کارت نامعتبر است.',
-            15 => 'چنین صادر کننده کارتی وجود ندارد.',
-            33 => 'از تاریخ انقضای کارت گذشته است و کارت دیگر معتبر نیست.',
-            38 => 'رمز کارت 3 مرتبه اشتباه وارد شده است در نتیجه کارت غیر فعال خواهد شد.',
-            55 => 'خریدار رمز کارت را اشتباه وارد کرده است.',
-            61 => 'مبلغ بیش از سقف برداشت می باشد.',
-            93 => 'تراکنش Authorize شده است (شماره PIN و PAN درست هستند) ولی امکان سند خوردن وجود ندارد.',
-            68 => 'تراکنش در شبکه بانکی Timeout خورده است.',
-            34 => 'خریدار یا فیلد CVV2 و یا فیلد ExpDate را اشتباه وارد کرده است (یا اصال وارد نکرده است).',
-            51 => 'موجودی حساب خریدار، کافی نیست.',
-            84 => 'سیستم بانک صادر کننده کارت خریدار، در وضعیت عملیاتی نیست.',
-            96 => 'کلیه خطاهای دیگر بانکی باعث ایجاد چنین خطایی می گردد.',
-            default => 'خطای ناشناخته ای رخ داده است.',
-        };
-        throw new PurchaseFailedException($message);
-    }
-
-    /**
-     * Trigger an exception
-     *
-     * @param $status
-     *
-     * @throws InvalidPaymentException
-     */
-    private function notVerified($status)
-    {
-        $message = match ($status) {
-            -1 => 'خطا در پردازش اطلاعات ارسالی (مشکل در یکی از ورودی ها و ناموفق بودن فراخوانی متد برگشت تراکنش)',
-            -3 => 'ورودیها حاوی کارکترهای غیرمجاز میباشند.',
-            -4 => 'کلمه عبور یا کد فروشنده اشتباه است (Merchant Authentication Failed)',
-            -6 => 'سند قبال برگشت کامل یافته است. یا خارج از زمان 30 دقیقه ارسال شده است.',
-            -7 => 'رسید دیجیتالی تهی است.',
-            -8 => 'طول ورودیها بیشتر از حد مجاز است.',
-            -9 => 'وجود کارکترهای غیرمجاز در مبلغ برگشتی.',
-            -10 => 'رسید دیجیتالی به صورت Base64 نیست (حاوی کاراکترهای غیرمجاز است)',
-            -11 => 'طول ورودیها ک تر از حد مجاز است.',
-            -12 => 'مبلغ برگشتی منفی است.',
-            -13 => 'مبلغ برگشتی برای برگشت جزئی بیش از مبلغ برگشت نخوردهی رسید دیجیتالی است.',
-            -14 => 'چنین تراکنشی تعریف نشده است.',
-            -15 => 'مبلغ برگشتی به صورت اعشاری داده شده است.',
-            -16 => 'خطای داخلی سیستم',
-            -17 => 'برگشت زدن جزیی تراکنش مجاز نمی باشد.',
-            -18 => 'IP Address فروشنده نا معتبر است و یا رمز تابع بازگشتی (reverseTransaction) اشتباه است.',
-            default => 'خطای ناشناخته ای رخ داده است.',
-        };
-        throw new InvalidPaymentException($message);
     }
 
     /**

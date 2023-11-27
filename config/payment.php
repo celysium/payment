@@ -57,9 +57,9 @@ return [
         ],
         'saman' => [
             'gateway' => Saman::class,
-            'apiPurchaseUrl' => 'https://sep.shaparak.ir/Payments/InitPayment.asmx?WSDL',
-            'apiPaymentUrl' => 'https://sep.shaparak.ir/payment.aspx',
-            'apiVerificationUrl' => 'https://sep.shaparak.ir/payments/referencepayment.asmx?WSDL',
+            'apiPurchaseUrl' => 'https://sep.shaparak.ir/onlinepg/onlinepg',
+            'apiPaymentUrl' => 'https://sep.shaparak.ir/OnlinePG/OnlinePG',
+            'apiVerificationUrl' => 'https://sep.shaparak.ir/verifyTxnRandomSessionkey/ipg/VerifyTransaction',
             'apiRefundUrl' => 'https://srtm.sep.ir/RefundService/srvRefundV2.svc?wsdl',
             'merchantId' => env('SAMAN_MERCHANT_ID'),
             'transactionTermId' => env('SAMAN_TRANSACTION_TERM_ID'),
