@@ -33,7 +33,7 @@ class Local implements DriverInterface
 
         $data = [
             'id'            => $this->payment->id,
-            'quick'         => $this->payment->quick ?? false,
+            'quick'         => $this->payment->getDetail('quick', false),
             'amount'        => $this->payment->amount,
             'callbackUrl'   => $this->payment->config->callbackUrl,
             'status'        => 0,
