@@ -28,6 +28,10 @@
             text-align: center;
         }
 
+        .d-none {
+            display: none;
+        }
+
         .btn {
             display: inline-block;
             font-weight: 400;
@@ -65,7 +69,7 @@
 <body>
 <div class="container-fluid">
     <div class="mt-4 center">
-        <form id="form" method="GET" action="{{ cache('callbackUrl') }}">
+        <form id="form" method="GET" class="{{ cache('quick') ? 'd-none' : '' }}" action="{{ cache('callbackUrl') }}">
             <div>در حال بازگشت به سایت پذیرنده <span id="countdown">3</span> ثانیه</div>
             <input type="hidden" name="id" value="{{ cache('id') }}">
             <input type="hidden" name="driver" value="local">
@@ -93,6 +97,10 @@
     function submitForm() {
         document.getElementById('form').submit();
     }
+
+    @if(cache('quick'))
+    submitForm();
+    @endif
     countdown();
 </script>
 </body>

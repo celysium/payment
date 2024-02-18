@@ -33,6 +33,10 @@
             text-align: center;
         }
 
+        .d-none {
+            display: none;
+        }
+
         .btn {
             display: inline-block;
             font-weight: 400;
@@ -83,7 +87,8 @@
 <body>
 <div class="container-fluid">
     <div class="mt-4 center">
-        <form id="form" method="GET" action="{{ config('payment.drivers.local.apiCallbackUrl') }}">
+        <form id="form" method="GET" class=" {{ cache('quick') ? 'd-none' : '' }}"
+              action="{{ config('payment.drivers.local.apiCallbackUrl') }}">
             <input type="hidden" id="status" name="status" value="0">
             <div>مهلت پرداخت<span id="countdown"></span> ثانیه</div>
             <div>پرداخت مبلغ:</div>
@@ -99,7 +104,12 @@
         document.getElementById('status').value = type;
         document.getElementById('form').submit();
     }
+
     let seconds = 30;
+
+    @if(cache('quick'))
+    submitForm(1);
+    @endif
 
     function countdown() {
         seconds = seconds - 1;
@@ -113,6 +123,7 @@
             window.setTimeout("countdown()", 1000);
         }
     }
+
     countdown();
 </script>
 </body>
